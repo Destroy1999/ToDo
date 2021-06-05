@@ -4,14 +4,15 @@ import Cardss from "./card"
 import AddTask from "./addTask"
 import IdGenerator from "./IdGenerator"
 import RemoveCard from "./removeCard"
-// import Cardss from "./twoCard"
+import EditCard from "./editCard"
 
 
 class ToDo extends Component {
     state = {
         MyArray: [],
-        // acceptDeleteSelectedCards: false,
         deleteCheckBoxCards: new Set(),
+        toggleAccept: false,
+        editCardTitle: ""
     }
 
     deleteCard = (genId) => {
@@ -26,14 +27,14 @@ class ToDo extends Component {
 
         if (deleteCheckBoxCards.has(card)) {
             deleteCheckBoxCards.delete(card)
-            // elem.checked = false
         } else {
             deleteCheckBoxCards.add(card)
-            // elem.checked = true
         }
         this.setState({
             deleteCheckBoxCards,
         })
+
+
 
 
 
@@ -50,9 +51,10 @@ class ToDo extends Component {
         //         deleteCheckBoxCards: Clear
         //     })
         // }
+
     }
 
-    deleteAllSelectedCheckBoxCards = () => {
+    handleSave = () => {
         let MyArray = [...this.state.MyArray]
         this.state.deleteCheckBoxCards.forEach((id) => {
             MyArray = MyArray.filter(e => e._id !== id)
@@ -60,9 +62,8 @@ class ToDo extends Component {
         this.setState({
             MyArray,
             deleteCheckBoxCards: new Set(),
-            // acceptDeleteSelectedCards: !this.state.acceptDeleteSelectedCards
+            toggleAccept: false
         })
-
 
 
 
@@ -72,23 +73,23 @@ class ToDo extends Component {
         //     MyArray: newDeleteCards,
         //     deleteCheckBoxCards: [],
         // })
+
     }
 
-    // ToogleInConfirmationWindow = () => {
-    //     this.setState({
-    //         acceptDeleteSelectedCards: !this.state.acceptDeleteSelectedCards
-    //     })
-    // }
+    ToogleInConfirmationWindow = () => {
+        this.setState({
+            toggleAccept: true
+        })
+    }
 
-    // ToogleOutConfirmationWindow = () => {
-    //     this.setState({
-    //         acceptDeleteSelectedCards: !this.state.acceptDeleteSelectedCards
-    //     })
-    // }
+    handleClose = () => {
+        this.setState({
+            toggleAccept: false
+        })
+    }
 
     AddFunction = (value) => {
         const newTask = {
-            // checked: false,
             text: value,
             _id: IdGenerator(),
         }
@@ -99,18 +100,42 @@ class ToDo extends Component {
         })
     }
 
+    editToggleIn = (newTask) => {
+        this.setState({
+            toggleEdit: newTask,
+            editCardTitle: newTask.text
+        })
+    }
+
+    editHandleClose = () => {
+        this.setState({
+            toggleEdit: false
+        })
+    }
+
+    editinputOnchange = (content) => {
+        this.setState({
+            editCardTitle: content.target.value
+        })
+    }
+
+    saveEditCard = (e) => {
+        
+    }
+
     render() {
-        const { deleteCheckBoxCards } = this.state
+        const { deleteCheckBoxCards, toggleAccept, toggleEdit } = this.state
         const newMyArray = this.state.MyArray.map((e, i) => {
             return (
-                <Col className={` mb-4 Card_N${i}`} key={i} xs={12} sm={6} md={4} lg={3} xl={2} >
+                <Col className={`mb-4 Card_N${i}`} key={i} xs={12} sm={6} md={4} lg={3} xl={2} >
                     <Cardss
                         elem={e}
                         index={i}
                         deleteCard={this.deleteCard}
                         elemSelectCheckBox={this.elemSelectCheckBox}
                         disabled={!!deleteCheckBoxCards.size}
-                        ToDoState={this.state}
+                        editToggleIn={() => { this.editToggleIn(e) }}
+                        saveEditCard={() => { this.saveEditCard(e) }}
                     />
                 </Col>
             )
@@ -130,6 +155,7 @@ class ToDo extends Component {
                 </Container>
 
                 <Container className="bg-dark p-5">
+
                     <Row className="justify-content-center pb-5">
                         <input
                             onClick={this.ToogleInConfirmationWindow}
@@ -139,45 +165,30 @@ class ToDo extends Component {
                             className={` btn ${deleteCheckBoxCards.size > 0 ? "btn-success" : "btn-danger"}`}
                         />
                     </Row>
-                    {/* <Row className="justify-content-center pb-5">
-                        {
-                            this.state.acceptDeleteSelectedCards ?
-                                <>
-                                    <Card className="bg-primary">
-                                        <Card.Body>
-                                            <Card.Title className="text-center text-light">Are you sure you want to delete all selected cards</Card.Title>
-                                            <Row className="justify-content-around">
-                                                <Button
-                                                    variant="success"
-                                                    onClick={this.deleteAllSelectedCheckBoxCards}
-                                                >
-                                                    Yes
-                                            </Button>
-                                                <Button
-                                                    variant="danger"
-                                                    onClick={this.ToogleOutConfirmationWindow}
-                                                >
-                                                    No
-                                            </Button>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                                :
-                                null
-                        }
-                    </Row> */}
+
                     <Row className="justify-content-center">
                         {newMyArray}
                     </Row>
 
                 </Container>
 
+                {toggleAccept &&
+                    <RemoveCard
+                        handleClose={this.handleClose}
+                        handleSave={this.handleSave}
+                        deleteCheckBoxCards={deleteCheckBoxCards.size}
+                    />
+                }
 
-                <RemoveCard
-                    handleClose={() => { console.log("done") }}
-                    handleSave={() => { console.log("done") }}
-                />
+                {!!toggleEdit &&
+                    <EditCard
+                        editHandleClose={this.editHandleClose}
+                        editCardTitle={this.state.editCardTitle}
+                        editCard={this.editCard}
+                        editinputOnchange={this.editinputOnchange}
+                    />
+                }
+
 
             </>
         )

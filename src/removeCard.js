@@ -1,15 +1,14 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 
-function RemoveCard(props) {
+export default function RemoveCard(props) {
 
     return (
-
-        <Modal show={true} onHide={props.handleClose}>
+        <Modal show={true} animation={false} onHide={props.handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Modal heading</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+            <Modal.Body>Duk ardzok uzumek jnjel {props.deleteCheckBoxCards} card ?</Modal.Body>
             <Modal.Footer>
                 <Button variant="danger" onClick={props.handleClose}>
                     Cancle
@@ -23,4 +22,3 @@ function RemoveCard(props) {
     )
 
 }
-export default RemoveCard
