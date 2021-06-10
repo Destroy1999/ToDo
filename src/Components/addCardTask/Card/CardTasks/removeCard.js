@@ -6,9 +6,9 @@ export default function RemoveCard(props) {
     return (
         <Modal show={true} animation={false} onHide={props.handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Modal heading</Modal.Title>
+                <Modal.Title className="text-info">Confirm the action</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Duk ardzok uzumek jnjel {props.deleteCheckBoxCards} card ?</Modal.Body>
+            <Modal.Body className="text-secondary h5">Are you sure you want to delete {props.deleteCheckBoxCards} cards ?</Modal.Body>
             <Modal.Footer>
                 <Button variant="danger" onClick={props.handleClose}>
                     Cancle

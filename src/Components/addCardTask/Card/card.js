@@ -18,7 +18,7 @@ class Cardss extends Component {
         const myCardIndex = this.props.index
         const { disabled } = this.props
         return (
-            <Card className={`text-center border border-primary ${this.state.checked ? "bg-danger" : myCardIndex % 2 === 0 ? "bg-warning" : "bg-success"} `} >
+            <Card className={`text-center border border-primary ${this.state.checked && disabled ? "bg-danger" : myCardIndex % 2 === 0 ? "bg-warning" : "bg-success"} `} >
                 {/* <Card className={`text-center border border-primary ${myCardIndex % 2 === 0 ? "bg-warning" : "bg-success"} `} > */}
                 <Card.Body>
                     <input
@@ -33,14 +33,14 @@ class Cardss extends Component {
                         onClick={() => this.props.deleteCard(myCard._id)}
                         disabled={disabled}
                     >
-                        X
+                        <i className="fas fa-trash-alt text-light"></i>
                     </Button>
                     <Button
-                        variant="success"
+                        variant="info"
                         onClick={this.props.editToggleIn}
                         disabled={disabled}
                     >
-                        \
+                        <i className="fas fa-pencil-alt text-light"></i>
                     </Button>
                 </Card.Body>
             </Card >

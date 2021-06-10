@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import Cardss from "./card"
-import AddTask from "./addTask"
-import IdGenerator from "./IdGenerator"
-import RemoveCard from "./removeCard"
-import EditCard from "./editCard"
+import Cardss from "../addCardTask/Card/card"
+import AddTask from "../addCardTask/addTask"
+import IdGenerator from "../IdGenerator/IdGenerator"
+import RemoveCard from "../addCardTask/Card/CardTasks/removeCard"
+import EditCard from "../addCardTask/Card/CardTasks/editCard"
 
 
 class ToDo extends Component {
@@ -12,7 +12,6 @@ class ToDo extends Component {
         MyArray: [],
         deleteCheckBoxCards: new Set(),
         toggleAccept: false,
-        editCardTitle: ""
     }
 
     deleteCard = (genId) => {
@@ -103,7 +102,6 @@ class ToDo extends Component {
     editToggleIn = (newTask) => {
         this.setState({
             toggleEdit: newTask,
-            editCardTitle: newTask.text
         })
     }
 
@@ -113,14 +111,14 @@ class ToDo extends Component {
         })
     }
 
-    editinputOnchange = (content) => {
+    saveEditTitle = (newTitle) => {
+        const MyArray = [...this.state.MyArray]
+        const saveNewEdit = MyArray.findIndex((e) => e._id === newTitle._id)
+        MyArray[saveNewEdit] = newTitle
         this.setState({
-            editCardTitle: content.target.value
+            MyArray: MyArray,
+            toggleEdit: false,
         })
-    }
-
-    saveEditCard = (e) => {
-        
     }
 
     render() {
@@ -135,7 +133,6 @@ class ToDo extends Component {
                         elemSelectCheckBox={this.elemSelectCheckBox}
                         disabled={!!deleteCheckBoxCards.size}
                         editToggleIn={() => { this.editToggleIn(e) }}
-                        saveEditCard={() => { this.saveEditCard(e) }}
                     />
                 </Col>
             )
@@ -182,10 +179,9 @@ class ToDo extends Component {
 
                 {!!toggleEdit &&
                     <EditCard
+                        data={toggleEdit}
                         editHandleClose={this.editHandleClose}
-                        editCardTitle={this.state.editCardTitle}
-                        editCard={this.editCard}
-                        editinputOnchange={this.editinputOnchange}
+                        onSave={this.saveEditTitle}
                     />
                 }
 
